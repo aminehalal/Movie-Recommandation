@@ -18,7 +18,7 @@ class SingUpPage :
             db = sqlite3.connect(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\moviesrecommandation.db")
             cr = db.cursor()
             cr.execute("create table if not exists accounts (id integer primary key autoincrement,firstname text , lastname text ,gender text,birthday date ,email text , username text, password text , watched text ,watchlist text)")
-            cr.execute("create table if not exists activite (id_activate integer primary key autoincrement, username text, type text , movie text ,datetime text,foreign key (username) references accounts(username))")
+            cr.execute("create table if not exists operations (id_activate integer primary key autoincrement, username text, type text , movie text ,datetime text,foreign key (username) references accounts(username))")
             db.commit()    
         def closedb():
             db.close()
