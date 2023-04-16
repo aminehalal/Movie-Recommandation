@@ -47,6 +47,9 @@ class MoviesRecommandation :
             username = usernameput.get()
             password = passwordput.get()
 
+            def logout ():
+                new = MoviesRecommandation(root)
+
             def removeone() :
                 movie = watchList.get(watchList.curselection())
                 watchList.delete(watchList.curselection())
@@ -62,7 +65,6 @@ class MoviesRecommandation :
                 cr.execute(f"delete from operations where username=='{username}' and type=='Watched' and movie == '{movie}'")
                 db.commit()
                 getwatched()
-                do_it()
 
             def getwatched():
                 opendb()
@@ -91,7 +93,6 @@ class MoviesRecommandation :
                 sugList.delete(sugList.curselection())
                 print(f"the movie is {movie}")
                 getwatched()
-                do_it()
 
             def getwatchlist():
                 opendb()
@@ -191,8 +192,8 @@ class MoviesRecommandation :
                 btnsearch = Button(mainframe ,text="Search" ,command=search_now,font=("Courier New",18,"bold"),bg="black",fg="white",bd=4,relief=RIDGE )
                 btnsearch.place (x= 20 , y= 80 , width=230 , height=40)
 
-                lblsug = Label(mainframe , text="Suggest Movies",font=("Courier New",20,"bold"),bg="black",fg="white",bd=4,relief=RIDGE)
-                lblsug.place(x=20 ,y=140, width=230)
+                lblsug = Button(mainframe ,command=do_it, text="Suggest Movies",font=("Courier New",20,"bold"),bg="black",fg="white",bd=4,relief=RIDGE)
+                lblsug.place(x=20 ,y=140, width=230,height= 40)
 
                 sugList = Listbox(mainframe ,font=("Courier New",12,"bold"),bg="white",fg="black",width=40)
                 sugList.place(x=20 , y=190 , width=230, height=230)
@@ -221,12 +222,15 @@ class MoviesRecommandation :
                 lblwatched.place(x=530 ,y=30, width=230)
 
                 watchedList = Listbox(mainframe ,font=("Courier New",12,"bold"),bg="white",fg="black",width=40)
-                watchedList.place(x=530 , y=80 , width=230, height=390)
+                watchedList.place(x=530 , y=80 , width=230, height=340)
 
                 btnremovetwo = Button(mainframe ,text="Remove" ,command=removetwo,font=("Courier New",18,"bold"),bg="black",fg="white",bd=4,relief=RIDGE )
-                btnremovetwo.place (x= 530 , y= 480 , width=230 , height=40)
+                btnremovetwo.place (x= 530 , y= 430 , width=230 , height=40)
 
-                do_it()
+                btnlogout = Button(mainframe ,text="Log out",command=logout ,font=("Courier New",18,"bold"),bg="black",fg="white",bd=4,relief=RIDGE )
+                btnlogout.place (x= 530 , y= 480 , width=230 , height=40)
+
+                #do_it()
                 getwatchlist()
                 getwatched()
             
