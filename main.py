@@ -15,7 +15,10 @@ import nltk
 from nltk.stem.porter import PorterStemmer
 ps = PorterStemmer()
 from sklearn.feature_extraction.text import TfidfVectorizer
-moviesdata = pd.read_csv(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\moviesdata.csv")
+import os
+current_path = os.path.dirname(os.path.abspath(__file__))
+moviesdata_path = "moviesdata.csv"
+moviesdata = pd.read_csv(os.path.join(current_path,moviesdata_path))
 vectors = cv.fit_transform(moviesdata['tags']).toarray()
 similarity = cosine_similarity(vectors)
 
@@ -32,13 +35,13 @@ class MoviesRecommandation :
         self.root = root
         self.root.title("Movies Recommandation")
         self.root.geometry ("1000x700+109+0")
-
-        db = sqlite3.connect(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\moviesrecommandation.db")
+        database_path = "moviesrecommandation.db"
+        db = sqlite3.connect(os.path.join(current_path , database_path))
         cr = db.cursor()
 
 
         def opendb():
-            db = sqlite3.connect(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\moviesrecommandation.db")
+            db = sqlite3.connect(os.path.join(current_path , database_path))
             cr = db.cursor()
 
         #Les Methodes
@@ -163,6 +166,7 @@ class MoviesRecommandation :
                 
                 # Recommend movies based on title similarity
                 recommendation_indices = np.argsort(title_similarity)[::-1][:20]
+                sugList.delete(0,END)
                 for i in recommendation_indices:
                     sugList.insert(sugList.size(), moviesdata.iloc[i].title)
 
@@ -175,7 +179,7 @@ class MoviesRecommandation :
                 print(movie_list)
                 recommend(movie_list)
 
-            db = sqlite3.connect(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\moviesrecommandation.db")
+            db = sqlite3.connect(os.path.join(current_path , database_path))
             cr = db.cursor()
 
             exist = cr.execute(f"select * from accounts where username =='{username}' and password=='{password}'")
@@ -238,7 +242,7 @@ class MoviesRecommandation :
                 print("username or password in wrong")
 
         #Back Ground
-        imgbg = Image.open(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\images\backfram.jpg")
+        imgbg = Image.open(os.path.join(current_path ,r"images\backfram.jpg"))
         imgbg = imgbg.resize((1000,700),Image.ANTIALIAS)
         self.photoimgbg = ImageTk.PhotoImage(imgbg)
 
@@ -255,7 +259,7 @@ class MoviesRecommandation :
         mainframe.place (x=200 , y= 120 , width=600 , height=500)
 
         #PicinMainFrame
-        imgmainframe = Image.open(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\images\mainframe.jpg")
+        imgmainframe = Image.open(os.path.join(current_path , r"images\mainframe.jpg"))
         imgmainframe = imgmainframe.resize((595,495),Image.ANTIALIAS)
         self.photoimgmainframe = ImageTk.PhotoImage(imgmainframe)
 

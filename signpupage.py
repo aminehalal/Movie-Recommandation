@@ -3,19 +3,21 @@ from tkcalendar import Calendar, DateEntry
 import sqlite3
 from random import randint
 from PIL import Image,ImageTk
+import os
+current_path = os.path.dirname(os.path.abspath(__file__))
 
 class SingUpPage :
     def __init__(self,root): 
         self.root = root
         self.root.title("Sign Up")
         self.root.geometry ("610x600+300+16")
-
-        db = sqlite3.connect(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\moviesrecommandation.db")
+        database_path = "moviesrecommandation.db"
+        db = sqlite3.connect(os.path.join(current_path,database_path))
         cr = db.cursor()
         db.commit()
 
         def opendb():
-            db = sqlite3.connect(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\moviesrecommandation.db")
+            db = sqlite3.connect(os.path.join(current_path,database_path))
             cr = db.cursor()
             cr.execute("create table if not exists accounts (id integer primary key autoincrement,firstname text , lastname text ,gender text,birthday date ,email text , username text, password text , watched text ,watchlist text)")
             cr.execute("create table if not exists operations (id_activate integer primary key autoincrement, username text, type text , movie text ,datetime text,foreign key (username) references accounts(username))")
@@ -76,7 +78,7 @@ class SingUpPage :
         mainframesign.place (x=50 , y= 60 , width=517 , height=530)
 
         #Picture
-        imgmainframe = Image.open(r"C:\Users\lenevo\Desktop\Langage\Python Projects\Project\Movie Recommandation\images\mainframe.jpg")
+        imgmainframe = Image.open(os.path.join(current_path ,r"images\mainframe.jpg"))
         imgmainframe = imgmainframe.resize((515,525),Image.ANTIALIAS)
         self.photoimgmainframe = ImageTk.PhotoImage(imgmainframe)
 
