@@ -85,11 +85,30 @@ def init_db():
         birthday DATE, email TEXT,
         username TEXT UNIQUE, password TEXT
     )""")
+    # Ensure operations table exists with the expected schema. If an older
+    # database has an `operations` table without an `id` column, migrate data
+    # into a new table that includes the autoincrementing `id` primary key.
+    # Keep `operations` simple (no enforced FK) to avoid migration issues
     cr.execute("""CREATE TABLE IF NOT EXISTS operations (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        username TEXT, type TEXT, movie TEXT, datetime TEXT,
-        FOREIGN KEY (username) REFERENCES accounts(username)
+        username TEXT, type TEXT, movie TEXT, datetime TEXT
     )""")
+
+    # Check whether the existing operations table actually has an `id` column
+    cr.execute("PRAGMA table_info(operations)")
+    cols = [r[1] for r in cr.fetchall()]
+    if 'id' not in cols:
+        # Migrate existing data to a new table with the id column
+        cr.execute("ALTER TABLE operations RENAME TO operations_old")
+        cr.execute("""CREATE TABLE operations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT, type TEXT, movie TEXT, datetime TEXT
+        )""")
+        # Copy columns that exist in the old table (if any)
+        # Older schema expected: username, type, movie, datetime
+        cr.execute("INSERT INTO operations (username,type,movie,datetime) SELECT username,type,movie,datetime FROM operations_old")
+        cr.execute("DROP TABLE operations_old")
+
     db.commit(); db.close()
 
 # ─── Styled Widget Factories ──────────────────────────────────────────────────
